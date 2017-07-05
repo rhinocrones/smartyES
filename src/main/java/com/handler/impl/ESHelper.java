@@ -1,9 +1,12 @@
 package com.handler.impl;
 
+import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
+import static org.elasticsearch.index.query.QueryBuilders.termQuery;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.concurrent.ExecutionException;
-import static org.elasticsearch.index.query.QueryBuilders.*;
+
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.update.UpdateRequest;
@@ -12,6 +15,7 @@ import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
 
 import com.handler.CrudHelper;
@@ -110,8 +114,8 @@ public class ESHelper implements CrudHelper {
 		        .execute().actionGet());
 	}
 
-	public void searchByIndexAndName(String index, String name) {
-		QueryBuilder builder = termQuery("name", name);
+	public void searchByIndexAndName(String index, String name) {	
+		QueryBuilder builder = QueryBuilders.matchPhraseQuery("name", name);
 		System.out.println(client.prepareSearch(index).setQuery(builder)
 		        .execute().actionGet());
 	}
